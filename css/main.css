@@ -5,7 +5,8 @@ html,body {
 
 body {
   overflow-x: auto;
-  white-space: nowrap
+  white-space: nowrap;
+  background-color: #52B5D2;
 }
 
 button {
@@ -30,13 +31,15 @@ button {
   min-width: 275px;
   width: 31%;
   margin: 1%;
-  border: 1px solid black;
   border-radius: 2px;
+  box-shadow: 0.5px 0.5px 1px #888888;
+  background-color: #EEEEEE;
 }
 
 .column-header {
   width: 100%;
   font-size: 16px;
+  color: #414141;
   margin: 6px;
 }
 
@@ -58,12 +61,14 @@ button {
 
 .workItem {
   position: relative;
-  border: 1px solid black;
   border-radius: 2px;
+  box-shadow: 0.5px 0.5px 1px #888888;
   min-height: 50px;
   margin: 6px;
   font-size: 14px;
+  color: #414141;
   padding: 5px;
+  background-color: white;
 }
 
 .workItem button {
@@ -127,12 +132,15 @@ button {
 #newItemButton {
   border: none;
   border-radius: 10px;
+  box-shadow: 0.5px 0.5px 1px #888888;
   position: absolute;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-bottom: 3px;
+  padding-left: 12px;
+  padding-right: 12px;
   background: linear-gradient(to bottom, #61bd4f, #5aac44);
   color: white;
   top: 5px;
   right: 5px;
   font-weight: bold;
+  font-size: 16px;
 }
