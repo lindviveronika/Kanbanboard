@@ -1,0 +1,138 @@
+html,body {
+  height: 100%;
+  font-family: 'Vollkorn', serif;
+}
+
+body {
+  overflow-x: auto;
+  white-space: nowrap
+}
+
+button {
+  cursor: pointer;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 10;
+}
+
+.column {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  min-width: 275px;
+  width: 31%;
+  margin: 1%;
+  border: 1px solid black;
+  border-radius: 2px;
+}
+
+.column-header {
+  width: 100%;
+  font-size: 16px;
+  margin: 6px;
+}
+
+.item-container {
+  width: 100%;
+  min-height: 50px;
+}
+
+.new-item-section {
+  text-align: center;
+}
+
+.new-item-section input {
+  width: 80%;
+  font-family: 'Vollkorn', serif;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.workItem {
+  position: relative;
+  border: 1px solid black;
+  border-radius: 2px;
+  min-height: 50px;
+  margin: 6px;
+  font-size: 14px;
+  padding: 5px;
+}
+
+.workItem button {
+  margin: 1px;
+  float: right;
+}
+
+.workItemDescription {
+  display: inline;
+}
+
+.btn {
+  border: none;
+  border-radius: 3px;
+  padding: 7px 20px;
+  font-weight: bold;
+}
+
+.editItemDialog {
+	display: none;
+  top: 0;
+  right: 0;
+  left: 0;
+  min-height: 100px;
+	border: 1px solid black;
+  border-radius: 2px;
+	position: absolute;
+  background-color: white;
+  z-index: 11;
+  margin-bottom: 100px;
+}
+
+.editItemWrapper {
+  padding: 5px;
+}
+
+.editItemDescription {
+  display: inline;
+  box-sizing: border-box;
+  outline: none;
+  font-family: 'Vollkorn', serif;
+  font-size: 14px;
+}
+
+.closeEditDialog {
+  position: absolute;
+  bottom: -35px;
+  right: 74px;
+  background: linear-gradient(to bottom, #B04632, #9f3f2d);
+  color: white;
+}
+
+.saveChangesButton {
+  position: absolute;
+  bottom: -35px;
+  right: 0px;
+  background: linear-gradient(to bottom, #61bd4f, #5aac44);
+  color: white;
+}
+
+#newItemButton {
+  border: none;
+  border-radius: 10px;
+  position: absolute;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: linear-gradient(to bottom, #61bd4f, #5aac44);
+  color: white;
+  top: 5px;
+  right: 5px;
+  font-weight: bold;
+}
