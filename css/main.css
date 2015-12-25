@@ -9,9 +9,6 @@ body {
   background-color: #52B5D2;
 }
 
-button {
-  cursor: pointer;
-}
 
 .overlay {
   display: none;
@@ -59,7 +56,7 @@ button {
   line-height: 20px;
 }
 
-.workItem {
+.item {
   position: relative;
   border-radius: 2px;
   box-shadow: 0.5px 0.5px 1px #888888;
@@ -71,23 +68,11 @@ button {
   background-color: white;
 }
 
-.workItem button {
-  margin: 1px;
-  float: right;
-}
-
-.workItemDescription {
+.item > .description {
   display: inline;
 }
 
-.btn {
-  border: none;
-  border-radius: 3px;
-  padding: 7px 20px;
-  font-weight: bold;
-}
-
-.editItemDialog {
+.edit-dialog {
 	display: none;
   top: 0;
   right: 0;
@@ -101,19 +86,34 @@ button {
   margin-bottom: 100px;
 }
 
-.editItemWrapper {
+.edit-dialog > .wrapper {
   padding: 5px;
 }
 
-.editItemDescription {
+.content-editable {
   display: inline;
   box-sizing: border-box;
   outline: none;
-  font-family: 'Vollkorn', serif;
-  font-size: 14px;
+  white-space: normal;
 }
 
-.closeEditDialog {
+button {
+  cursor: pointer;
+  border: none;
+}
+
+.item button {
+  margin: 1px;
+  float: right;
+}
+
+.btn-large {
+  border-radius: 3px;
+  padding: 7px 20px;
+  font-weight: bold;
+}
+
+.btn-close {
   position: absolute;
   bottom: -35px;
   right: 74px;
@@ -121,7 +121,11 @@ button {
   color: white;
 }
 
-.saveChangesButton {
+.btn-close:hover {
+  background: linear-gradient(to bottom, #c65039, #c64f39);
+}
+
+.btn-save {
   position: absolute;
   bottom: -35px;
   right: 0px;
@@ -129,18 +133,41 @@ button {
   color: white;
 }
 
+.btn-save:hover {
+  background: linear-gradient(to bottom, #7ac76b, #70be5b);
+}
+
+.btn-icon {
+  padding: 8px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: transparent;
+}
+
+.btn-icon:hover {
+  opacity: 0.7;
+}
+
+.btn-delete {
+  background-image: url(delete-icon.png);
+  opacity: 0.9;
+}
+
+.btn-edit {
+  background-image: url(edit-icon.png);
+}
+
 #newItemButton {
-  border: none;
   border-radius: 10px;
   box-shadow: 0.5px 0.5px 1px #888888;
   position: absolute;
   padding-bottom: 3px;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding-left: 10px;
+  padding-right: 10px;
   background: linear-gradient(to bottom, #61bd4f, #5aac44);
   color: white;
   top: 5px;
   right: 5px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 14px;
 }

@@ -1,14 +1,14 @@
 <script id="workItemTemplate" type="text/html">
  {{#items}}
- 	<div class="workItem" id="item-{{id}}">
- 	 	<button class="edit">Edit</button>
- 	 	<button class="delete">Delete</button>
- 		<div class="workItemDescription">{{description}}</div>
-    <div class="editItemDialog">
-        <div class="editItemWrapper">
-          <div class="editItemDescription" contenteditable></div>
-          <button class="btn closeEditDialog">Close</button>
-          <button class="btn saveChangesButton">Save</button>
+ 	<div class="item" id="item-{{id}}">
+    <button class="btn-icon btn-delete"></button>
+ 	 	<button class="btn-icon btn-edit"></button>
+ 		<div class="description">{{description}}</div>
+    <div class="edit-dialog">
+        <div class="wrapper">
+          <div class="content-editable" contenteditable></div>
+          <button class="btn-large btn-close">Close</button>
+          <button class="btn-large btn-save">Save</button>
         </div>
     </div>
  	</div>

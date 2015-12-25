@@ -7,38 +7,38 @@ $(document).ready(function(){
   //Add new item
   $('#newItemButton').click(function(){
       displayNewItem({items:{id: '', description: ''}});
-      var workItemEl = $('.workItem').last();
-      displayEditItemDialog(workItemEl.children('.editItemDialog'), workItemEl.children('.workItemDescription').text());
+      var workItemEl = $('.item').last();
+      displayEditDialog(workItemEl.children('.edit-dialog'), workItemEl.children('.description').text());
 
-      workItemEl.find('.saveChangesButton').click(function(){
-          var itemDescription = workItemEl.find('.editItemDescription').text();
+      workItemEl.find('.btn-save').click(function(){
+          var itemDescription = workItemEl.find('.content-editable').text();
           addNewItemDB(workItemEl, itemDescription, updateNewItem);
       });
 
-      workItemEl.find('.closeEditDialog').click(function(){
-          hideEditItemDialog(workItemEl.children('.editItemDialog'));
+      workItemEl.find('.btn-close').click(function(){
+          hideEditDialog(workItemEl.children('.edit-dialog'));
           workItemEl.remove();
       })
   });
 
   //Edit item
-  $(document).on('click','.edit',function(){
+  $(document).on('click','.btn-edit',function(){
       var workItem = $(this).parent();
 
-      displayEditItemDialog(workItem.children('.editItemDialog'), workItem.children('.workItemDescription').text());
+      displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
 
-      workItem.find('.saveChangesButton').click(function(){
-          var newDescription = workItem.find('.editItemDescription').text();
-          editItemDescriptionDB(workItem, newDescription, hideEditItemDialog);
+      workItem.find('.btn-save').click(function(){
+          var newDescription = workItem.find('.content-editable').text();
+          editItemDescriptionDB(workItem, newDescription, hideEditDialog);
       });
 
-      workItem.find('.closeEditDialog').click(function(){
-          hideEditItemDialog(workItem.children('.editItemDialog'));
+      workItem.find('.btn-close').click(function(){
+          hideEditDialog(workItem.children('.edit-dialog'));
       })
   });
 
   //Delete item
-  $(document).on('click','.delete',function(e){
+  $(document).on('click','.btn-delete',function(e){
       e.stopPropagation();
       var parent = $(this).parent();
 
@@ -100,7 +100,9 @@ function getWorkItemsDB(onComplete){
 }
 
 function addNewItemDB(workItemEl, itemDescription, onComplete){
-  var posting = $.post('php/addNewItem.php', {description: itemDescription, sortOrder: '1', stage: 'toDo'} );
+  var sortOrder = $('#toDo').find('.item-container').children().length - 1;
+
+  var posting = $.post('php/addNewItem.php', {description: itemDescription, sortOrder: sortOrder, stage: 'toDo'} );
   var errorMessage = 'Item was not added. Please refresh the page and try again.';
 
   posting.done(function(response){
@@ -122,8 +124,8 @@ function editItemDescriptionDB(workItem, newDescription, onComplete){
   posting.done(function(response){
       json = errorHandler(response, errorMessage);
       if(json != null){
-          onComplete(workItem.children('.editItemDialog'));
-          workItem.children('.workItemDescription').text(newDescription);
+          onComplete(workItem.children('.edit-dialog'));
+          workItem.children('.description').text(newDescription);
       }
   });
 
@@ -202,32 +204,32 @@ function displayWorkItems(templateInput){
 function displayNewItem(templateInput){
   $('#toDo').find('.item-container').append(Mustache.render(workItemTemplate, templateInput));
   $('html, body').animate({
-    scrollTop: $('.workItem').last().offset().top
+    scrollTop: $('.item').last().offset().top
   }, 1000);
 }
 
 function updateNewItem(item, id, description){
   item.attr('id','item-' + id);
-  item.find('.workItemDescription').text(description);
-  hideEditItemDialog(item.find('.editItemDialog'));
+  item.find('.description').text(description);
+  hideEditDialog(item.find('.edit-dialog'));
   $('.item-container').sortable('refresh');
 }
 
-function displayEditItemDialog(dialog, currentDescription){
+function displayEditDialog(dialog, currentDescription){
   dialog.show();
   $('.overlay').show();
   $('html, body').animate({
     scrollTop: $(dialog).last().offset().top
   }, 1000);
-  dialog.find('.editItemDescription').text(currentDescription);
-  dialog.find('.editItemDescription').focus();
-  placeCaretAtEnd( dialog.find('.editItemDescription')[0] );
+  dialog.find('.content-editable').text(currentDescription);
+  dialog.find('.content-editable').focus();
+  placeCaretAtEnd( dialog.find('.content-editable')[0] );
 }
 
-function hideEditItemDialog(dialog){
+function hideEditDialog(dialog){
   dialog.hide();
   $('.overlay').hide();
-  dialog.find('.saveChangesButton').off('click');
+  dialog.find('.btn-save').off('click');
   dialog.find('.loseEditDialog').off('click');
 }
 

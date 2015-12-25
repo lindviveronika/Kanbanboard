@@ -18,10 +18,9 @@
 	    	'status' => 'error',
 	    	'msg' => 'query failed'
 		);
-	}    
+	}
 
-	echo json_encode($response); 
+	echo json_encode($response);
 
     mysqli_close($connect);
 ?>
-                                                                                                                            
