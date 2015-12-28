@@ -9,7 +9,6 @@ body {
   background-color: #52B5D2;
 }
 
-
 .overlay {
   display: none;
   position: fixed;
@@ -43,17 +42,6 @@ body {
 .item-container {
   width: 100%;
   min-height: 50px;
-}
-
-.new-item-section {
-  text-align: center;
-}
-
-.new-item-section input {
-  width: 80%;
-  font-family: 'Vollkorn', serif;
-  font-size: 14px;
-  line-height: 20px;
 }
 
 .item {
