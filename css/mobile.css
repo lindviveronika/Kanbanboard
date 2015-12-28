@@ -1,0 +1,166 @@
+html,body {
+  height: 100%;
+  font-family: 'Vollkorn', serif;
+}
+
+body {
+  overflow-x: auto;
+  white-space: nowrap;
+  background-color: #52B5D2;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 10;
+}
+
+.column {
+  position: relative;
+  display: inline-block;
+  vertical-align: top;
+  min-width: 275px;
+  width: 92%;
+  margin: 4%;
+  border-radius: 2px;
+  box-shadow: 0.5px 0.5px 1px #888888;
+  background-color: #EEEEEE;
+}
+
+.column-header {
+  width: 100%;
+  font-size: 42px;
+  color: #414141;
+  margin: 20px;
+}
+
+.item-container {
+  width: 100%;
+  min-height: 50px;
+}
+
+.item {
+  position: relative;
+  border-radius: 2px;
+  box-shadow: 0.5px 0.5px 1px #888888;
+  min-height: 150px;
+  margin: 20px;
+  font-size: 36px;
+  color: #414141;
+  padding: 5px;
+  background-color: white;
+}
+
+.item > .description {
+  display: inline;
+}
+
+.edit-dialog {
+	display: none;
+  top: 0;
+  right: 0;
+  left: 0;
+  min-height: 100px;
+	border: 1px solid black;
+  border-radius: 2px;
+	position: absolute;
+  background-color: white;
+  z-index: 11;
+  margin-bottom: 100px;
+}
+
+.edit-dialog > .wrapper {
+  padding: 5px;
+}
+
+.content-editable {
+  display: inline;
+  box-sizing: border-box;
+  outline: none;
+  white-space: normal;
+}
+
+#inProgress {
+  display: none;
+}
+
+#done {
+  display: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+.item button {
+  margin: 1px;
+  float: right;
+}
+
+.btn-large {
+  border-radius: 3px;
+  padding: 7px 20px;
+  font-weight: bold;
+}
+
+.btn-close {
+  position: absolute;
+  bottom: -35px;
+  right: 74px;
+  background: linear-gradient(to bottom, #B04632, #9f3f2d);
+  color: white;
+}
+
+.btn-close:hover {
+  background: linear-gradient(to bottom, #c65039, #c64f39);
+}
+
+.btn-save {
+  position: absolute;
+  bottom: -35px;
+  right: 0px;
+  background: linear-gradient(to bottom, #61bd4f, #5aac44);
+  color: white;
+}
+
+.btn-save:hover {
+  background: linear-gradient(to bottom, #7ac76b, #70be5b);
+}
+
+.btn-icon {
+  padding: 8px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: transparent;
+}
+
+.btn-icon:hover {
+  opacity: 0.7;
+}
+
+.btn-delete {
+  background-image: url(delete-icon.png);
+  opacity: 0.9;
+}
+
+.btn-edit {
+  background-image: url(edit-icon.png);
+}
+
+#newItemButton {
+  position: fixed;
+  width: 100%;
+  height: 10%;
+  background: linear-gradient(to bottom, #61bd4f, #5aac44);
+  color: white;
+  bottom: 0px;
+  right: 0px;
+  font-weight: bold;
+  font-size: 60px;
+}
