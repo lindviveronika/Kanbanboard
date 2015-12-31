@@ -1,16 +1,17 @@
 $(document).ready(function(){
+
   var body = document.getElementById("body")
 
-  //Swipe left
-  Hammer(body).on("swipeleft", function() {
-      $('#toDo').hide();
-      $('#inProgress').toggle('slide',{direction: 'right'});
+  Hammer(body).on('panleft', function(event){
+
+    $('#swipeWrapper').addClass('anim-right');
+
   });
 
-  //Swipe right
-  Hammer(body).on("swiperight", function() {
-      $('#inProgress').hide();
-      $('#toDo').toggle('slide',{direction: 'left'});
+  Hammer(body).on('panright', function(event){
+
+    $('#swipeWrapper').addClass('anim-left');
+
   });
 
   //Load work items

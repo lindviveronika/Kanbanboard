@@ -9,6 +9,18 @@ body {
   background-color: #52B5D2;
 }
 
+#swipeWrapper {
+  transition: transform 2s ease-in-out;
+}
+
+.anim-right {
+  transform: translateX(-100%);
+}
+
+.anim-left {
+  transform: translateX(0);
+}
+
 .overlay {
   display: none;
   position: fixed;
@@ -83,14 +95,6 @@ body {
   box-sizing: border-box;
   outline: none;
   white-space: normal;
-}
-
-#inProgress {
-  display: none;
-}
-
-#done {
-  display: none;
 }
 
 button {
