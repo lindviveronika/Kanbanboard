@@ -1,0 +1,21 @@
+<script id="workItemTemplate" type="text/html">
+ {{#items}}
+ 	<div class="item" id="item-{{id}}">
+ 		<div class="description">{{description}}</div>
+    <div class="edit-dialog">
+        <div class="wrapper">
+          <button class="btn-icon btn-menu"></button>
+            <ul>
+              <li><a href="#" class="move-todo">Move to To Do</a></li>
+              <li><a href="#" class="move-inprogress">Move to In Progress</a></li>
+              <li><a href="#" class="move-done">Move to Done</a></li>
+              <li><a href="#" class="a-delete">Delete</a></li>
+            </ul>
+          <div class="content-editable" contenteditable></div>
+          <button class="btn-large btn-close">Close</button>
+          <button class="btn-large btn-save">Save</button>
+        </div>
+    </div>
+ 	</div>
+ {{/items}}
+</script>

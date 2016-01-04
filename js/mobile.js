@@ -3,15 +3,17 @@ $(document).ready(function(){
   var body = document.getElementById("body")
 
   Hammer(body).on('panleft', function(event){
-
-    $('#swipeWrapper').addClass('anim-right');
-
+    var currentPosition = parseInt($('#slider').css('left'));
+    if(currentPosition > -$('#slider').width()*2){
+      $('#slider').css('left', currentPosition - $('#slider').width() + 'px');
+    }
   });
 
   Hammer(body).on('panright', function(event){
-
-    $('#swipeWrapper').addClass('anim-left');
-
+    var currentPosition = parseInt($('#slider').css('left'));
+    if(currentPosition < 0){
+      $('#slider').css('left', currentPosition + $('#slider').width() + 'px');
+    }
   });
 
   //Load work items
@@ -21,7 +23,7 @@ $(document).ready(function(){
   //Add new item
   $('#newItemButton').click(function(){
       displayNewItem({items:{id: '', description: ''}});
-      var workItemEl = $('.item').last();
+      var workItemEl = $('#toDo').find('.item').last();
       displayEditDialog(workItemEl.children('.edit-dialog'), workItemEl.children('.description').text());
 
       workItemEl.find('.btn-save').click(function(){
@@ -35,43 +37,73 @@ $(document).ready(function(){
       })
   });
 
-  //Edit item
-  $(document).on('click','.btn-edit',function(){
-      var workItem = $(this).parent();
+  //Open edit dialog
+  $(document).on('click','.item',function(){
+    var workItem = $(this);
+    console.log('click on item');
+    displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
 
-      displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
+  });
 
-      workItem.find('.btn-save').click(function(){
-          var newDescription = workItem.find('.content-editable').text();
-          editItemDescriptionDB(workItem, newDescription, hideEditDialog);
-      });
+  //Save changes
+  $(document).on('click','.btn-save',function(event){
+      event.stopPropagation();
+      var workItem = $(this).closest('.item');
+      var newDescription = workItem.find('.content-editable').text();
+      editItemDescriptionDB(workItem, newDescription, hideEditDialog);
+  });
 
-      workItem.find('.btn-close').click(function(){
-          hideEditDialog(workItem.children('.edit-dialog'));
-      })
+  //Close dialog
+  $(document).on('click','.btn-close',function(event){
+      event.stopPropagation();
+      var workItem = $(this).closest('.item');
+      hideEditDialog(workItem.children('.edit-dialog'));
+  });
+
+  //Open menu
+  $(document).on('click','.btn-menu',function(event){
+      event.stopPropagation();
+      $(this).next('ul').show();
   });
 
   //Delete item
-  $(document).on('click','.btn-delete',function(e){
-      e.stopPropagation();
-      var parent = $(this).parent();
+  $(document).on('click','.a-delete',function(event){
+      event.stopPropagation();
+      var workItem = $(this).closest('.item');
+      deleteItemDB(workItem, function(item){item.remove(); hideEditDialog(workItem.children('.edit-dialog'));});
+  });
 
-      deleteItemDB(parent, function(item){item.remove()});
-  })
+  //Move item to To Do
+  $(document).on('click','.move-todo',function(event){
+      event.stopPropagation();
+      var workItem = $(this).closest('.item');
+      editItemStageDB(workItem, 'toDo', function(){
+        hideEditDialog(workItem.children('.edit-dialog'));
+        $('#toDo').find('.item-container').append(workItem);
+        $('#slider').css('left', '0px');
+      });
+  });
 
-  //Make items sortable
-  $('.item-container').sortable({
-      connectWith: '.item-container',
-      revert: true,
-      receive: function(event, ui) {
-          editItemStageDB(ui.item, getItemId($(this).parent()));
-      },
-      update: function(event, ui){
-          var data = $(this).sortable('serialize');
-          if(data != ''){
-              editItemSortOrderDB(data);
-          }
-      }
+  //Move item to In Progress
+  $(document).on('click','.move-inprogress',function(event){
+      event.stopPropagation();
+      var workItem = $(this).closest('.item');
+      editItemStageDB(workItem, 'inProgress', function(){
+        hideEditDialog(workItem.children('.edit-dialog'));
+        $('#inProgress').find('.item-container').append(workItem);
+        $('#slider').css('left', '-' + $('#slider').width() + 'px');
+      });
+  });
+
+  //Move item to Done
+  $(document).on('click','.move-done',function(event){
+      event.stopPropagation();
+      var workItem = $(this).closest('.item');
+      editItemStageDB(workItem, 'done', function(){
+        hideEditDialog(workItem.children('.edit-dialog'));
+        $('#done').find('.item-container').append(workItem);
+        $('#slider').css('left', '-' + $('#slider').width()*2 + 'px');
+      });
   });
 
 });
@@ -148,12 +180,13 @@ function editItemDescriptionDB(workItem, newDescription, onComplete){
   });
 }
 
-function editItemStageDB(workItem, stage){
+function editItemStageDB(workItem, stage, onComplete){
   var posting = $.post('php/editStage.php', {id: getItemId(workItem), stage: stage});
   var errorMessage = 'Item stage was not updated. Please refresh the page and try again.';
 
   posting.done(function(response){
       json = errorHandler(response, errorMessage);
+      onComplete();
   });
 
   posting.fail(function(){
@@ -175,6 +208,7 @@ function editItemSortOrderDB(items){
 }
 
 function deleteItemDB(workItem, onComplete){
+  console.log('delete');
   var posting = $.post('php/deleteItem.php', {id: getItemId(workItem)});
   var errorMessage = 'Item was not deleted. Please refresh the page and try again.';
 
@@ -206,7 +240,7 @@ function displayWorkItems(templateInput){
           doneItems.items.push(item);
       }
   });
-  $.get('workItemTemplate.html', function(templates) {
+  $.get('workItemTemplateMobile.html', function(templates) {
       workItemTemplate = $(templates).filter('#workItemTemplate').html();
       $('#toDo').find('.item-container').append(Mustache.render(workItemTemplate, toDoItems));
       $('#inProgress').find('.item-container').append(Mustache.render(workItemTemplate, inProgressItems));
@@ -226,10 +260,10 @@ function updateNewItem(item, id, description){
   item.attr('id','item-' + id);
   item.find('.description').text(description);
   hideEditDialog(item.find('.edit-dialog'));
-  $('.item-container').sortable('refresh');
 }
 
 function displayEditDialog(dialog, currentDescription){
+  console.log('show');
   dialog.show();
   $('.overlay').show();
   $('html, body').animate({
@@ -241,10 +275,9 @@ function displayEditDialog(dialog, currentDescription){
 }
 
 function hideEditDialog(dialog){
+  console.log('hide');
   dialog.hide();
   $('.overlay').hide();
-  dialog.find('.btn-save').off('click');
-  dialog.find('.loseEditDialog').off('click');
 }
 
 //Taken from http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
