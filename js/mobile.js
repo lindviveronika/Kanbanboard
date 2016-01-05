@@ -70,14 +70,25 @@ $(document).ready(function(){
   $(document).on('click','.a-delete',function(event){
       event.stopPropagation();
       var workItem = $(this).closest('.item');
-      deleteItemDB(workItem, function(item){item.remove(); hideEditDialog(workItem.children('.edit-dialog'));});
+      deleteItemDB(workItem, function(item){
+        item.remove();
+        hideEditDialog(workItem.children('.edit-dialog'));
+        var remainingItems = workItem.closest('.column').find('.item');
+        var itemIds = [];
+        remainingItems.each(function(){
+          console.log($(this).attr('id'));
+          //itemIds.push(getItemId($(this)));
+        });
+        //editItemSortOrderDB(itemIds);
+      });
   });
 
   //Move item to To Do
   $(document).on('click','.move-todo',function(event){
       event.stopPropagation();
       var workItem = $(this).closest('.item');
-      editItemStageDB(workItem, 'toDo', function(){
+      var sortOrder = getSortOrder('toDo');
+      editItemStageDB(workItem, 'toDo', sortOrder, function(){
         hideEditDialog(workItem.children('.edit-dialog'));
         $('#toDo').find('.item-container').append(workItem);
         $('#slider').css('left', '0px');
@@ -88,7 +99,8 @@ $(document).ready(function(){
   $(document).on('click','.move-inprogress',function(event){
       event.stopPropagation();
       var workItem = $(this).closest('.item');
-      editItemStageDB(workItem, 'inProgress', function(){
+      var sortOrder = getSortOrder('inProgress');
+      editItemStageDB(workItem, 'inProgress', sortOrder, function(){
         hideEditDialog(workItem.children('.edit-dialog'));
         $('#inProgress').find('.item-container').append(workItem);
         $('#slider').css('left', '-' + $('#slider').width() + 'px');
@@ -99,7 +111,8 @@ $(document).ready(function(){
   $(document).on('click','.move-done',function(event){
       event.stopPropagation();
       var workItem = $(this).closest('.item');
-      editItemStageDB(workItem, 'done', function(){
+      var sortOrder = getSortOrder('done');
+      editItemStageDB(workItem, 'done', sortOrder, function(){
         hideEditDialog(workItem.children('.edit-dialog'));
         $('#done').find('.item-container').append(workItem);
         $('#slider').css('left', '-' + $('#slider').width()*2 + 'px');
@@ -107,6 +120,10 @@ $(document).ready(function(){
   });
 
 });
+
+function getSortOrder(column){
+  return  $('#' + column).find('.item-container').children().length;
+}
 
 function getItemId(workItem){
   return workItem.attr('id').replace('item-','');
@@ -146,8 +163,7 @@ function getWorkItemsDB(onComplete){
 }
 
 function addNewItemDB(workItemEl, itemDescription, onComplete){
-  var sortOrder = $('#toDo').find('.item-container').children().length - 1;
-
+  var sortOrder = getSortOrder('toDo') - 1;
   var posting = $.post('php/addNewItem.php', {description: itemDescription, sortOrder: sortOrder, stage: 'toDo'} );
   var errorMessage = 'Item was not added. Please refresh the page and try again.';
 
@@ -180,8 +196,8 @@ function editItemDescriptionDB(workItem, newDescription, onComplete){
   });
 }
 
-function editItemStageDB(workItem, stage, onComplete){
-  var posting = $.post('php/editStage.php', {id: getItemId(workItem), stage: stage});
+function editItemStageDB(workItem, stage, sortOrder, onComplete){
+  var posting = $.post('php/editStage.php', {id: getItemId(workItem), stage: stage, sortOrder: sortOrder});
   var errorMessage = 'Item stage was not updated. Please refresh the page and try again.';
 
   posting.done(function(response){

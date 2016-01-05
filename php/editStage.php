@@ -3,7 +3,8 @@
 
     $id = (int)$_POST['id'];
     $stage = $_POST['stage'];
-    $query = "UPDATE workItems SET stage = '" . $stage . "' WHERE Id = " . $id;
+    $sortOrder = $_POST['sortOrder'];
+    $query = "UPDATE workItems SET stage = '" . $stage . "', sortOrder =" . $sortOrder . " WHERE Id = " . $id;
     $result = mysqli_query($connect, $query);
 
 	if($result !== false) {
@@ -17,9 +18,9 @@
 	    	'status' => 'error',
 	    	'msg' => 'query failed'
 		);
-	}    
+	}
 
-	echo json_encode($response); 
+	echo json_encode($response);
 
 	mysqli_close($connect);
 ?>
