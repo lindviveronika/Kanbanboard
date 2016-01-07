@@ -71,15 +71,14 @@ $(document).ready(function(){
       event.stopPropagation();
       var workItem = $(this).closest('.item');
       deleteItemDB(workItem, function(item){
-        item.remove();
         hideEditDialog(workItem.children('.edit-dialog'));
-        var remainingItems = workItem.closest('.column').find('.item');
-        var itemIds = [];
-        remainingItems.each(function(){
-          console.log($(this).attr('id'));
-          //itemIds.push(getItemId($(this)));
-        });
-        //editItemSortOrderDB(itemIds);
+        var container = workItem.closest('.item-container');
+        item.remove();
+        var remainingItems = container.children('.item');
+        var itemIds = toIdString(remainingItems);
+        if(itemIds.length > 0){
+          editItemSortOrderDB(itemIds);
+        }
       });
   });
 
@@ -127,6 +126,17 @@ function getSortOrder(column){
 
 function getItemId(workItem){
   return workItem.attr('id').replace('item-','');
+}
+
+function toIdString(idArray){
+  var idString = '';
+  idArray.each(function(){
+    if(idString != ''){
+      idString += '&'
+    }
+    idString += 'item[]=' + (getItemId($(this)));
+  });
+  return idString;
 }
 
 function errorHandler(response, errorMessage){

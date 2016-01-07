@@ -42,7 +42,15 @@ $(document).ready(function(){
       e.stopPropagation();
       var parent = $(this).parent();
 
-      deleteItemDB(parent, function(item){item.remove()});
+      deleteItemDB(parent, function(item){
+        var container = parent.closest('.item-container');
+        item.remove();
+        var remainingItems = container.children('.item');
+        var itemIds = toIdString(remainingItems);
+        if(itemIds.length > 0){
+          editItemSortOrderDB(itemIds);
+        }
+      });
   })
 
   //Make items sortable
@@ -54,6 +62,7 @@ $(document).ready(function(){
       },
       update: function(event, ui){
           var data = $(this).sortable('serialize');
+          console.log(data);
           if(data != ''){
               editItemSortOrderDB(data);
           }
@@ -64,6 +73,17 @@ $(document).ready(function(){
 
 function getItemId(workItem){
   return workItem.attr('id').replace('item-','');
+}
+
+function toIdString(idArray){
+  var idString = '';
+  idArray.each(function(){
+    if(idString != ''){
+      idString += '&'
+    }
+    idString += 'item[]=' + (getItemId($(this)));
+  });
+  return idString;
 }
 
 function errorHandler(response, errorMessage){
