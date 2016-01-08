@@ -74,48 +74,26 @@ $(document).ready(function(){
         hideEditDialog(workItem.children('.edit-dialog'));
         var container = workItem.closest('.item-container');
         item.remove();
-        var remainingItems = container.children('.item');
-        var itemIds = toIdString(remainingItems);
-        if(itemIds.length > 0){
-          editItemSortOrderDB(itemIds);
-        }
+        updateSortOrder(container);
       });
   });
 
   //Move item to To Do
   $(document).on('click','.move-todo',function(event){
       event.stopPropagation();
-      var workItem = $(this).closest('.item');
-      var sortOrder = getSortOrder('toDo');
-      editItemStageDB(workItem, 'toDo', sortOrder, function(){
-        hideEditDialog(workItem.children('.edit-dialog'));
-        $('#toDo').find('.item-container').append(workItem);
-        $('#slider').css('left', '0px');
-      });
+      moveItem($(this).closest('.item'), 'toDo');
   });
 
   //Move item to In Progress
   $(document).on('click','.move-inprogress',function(event){
       event.stopPropagation();
-      var workItem = $(this).closest('.item');
-      var sortOrder = getSortOrder('inProgress');
-      editItemStageDB(workItem, 'inProgress', sortOrder, function(){
-        hideEditDialog(workItem.children('.edit-dialog'));
-        $('#inProgress').find('.item-container').append(workItem);
-        $('#slider').css('left', '-' + $('#slider').width() + 'px');
-      });
+      moveItem($(this).closest('.item'), 'inProgress');
   });
 
   //Move item to Done
   $(document).on('click','.move-done',function(event){
       event.stopPropagation();
-      var workItem = $(this).closest('.item');
-      var sortOrder = getSortOrder('done');
-      editItemStageDB(workItem, 'done', sortOrder, function(){
-        hideEditDialog(workItem.children('.edit-dialog'));
-        $('#done').find('.item-container').append(workItem);
-        $('#slider').css('left', '-' + $('#slider').width()*2 + 'px');
-      });
+      moveItem($(this).closest('.item'), 'done');
   });
 
 });
@@ -286,6 +264,24 @@ function updateNewItem(item, id, description){
   item.attr('id','item-' + id);
   item.find('.description').text(description);
   hideEditDialog(item.find('.edit-dialog'));
+}
+
+function moveItem(item, toColumn){
+  var sortOrder = getSortOrder(toColumn);
+  editItemStageDB(item, toColumn, sortOrder, function(){
+    hideEditDialog(item.children('.edit-dialog'));
+    var prevContainer = item.closest('.item-container');
+    $('#' + toColumn).find('.item-container').append(item);
+    updateSortOrder(prevContainer);
+  });
+}
+
+function updateSortOrder(itemContainer){
+  var remainingItems = itemContainer.children('.item');
+  var itemIds = toIdString(remainingItems);
+  if(itemIds.length > 0){
+    editItemSortOrderDB(itemIds);
+  }
 }
 
 function displayEditDialog(dialog, currentDescription){
