@@ -4,15 +4,21 @@ $(document).ready(function(){
 
   Hammer(body).on('panleft', function(event){
     var currentPosition = parseInt($('#slider').css('left'));
-    if(currentPosition > -$('#slider').width()*2){
-      $('#slider').css('left', currentPosition - $('#slider').width() + 'px');
+    if(currentPosition == 0){
+      showColumn('inProgress');
+    }
+    else if (currentPosition == -$('#slider').width()){
+      showColumn('done');
     }
   });
 
   Hammer(body).on('panright', function(event){
     var currentPosition = parseInt($('#slider').css('left'));
-    if(currentPosition < 0){
-      $('#slider').css('left', currentPosition + $('#slider').width() + 'px');
+    if(currentPosition == -$('#slider').width()){
+      showColumn('toDo');
+    }
+    else if (currentPosition == -2 * $('#slider').width()) {
+      showColumn('inProgress');
     }
   });
 
@@ -22,6 +28,7 @@ $(document).ready(function(){
 
   //Add new item
   $('#newItemButton').click(function(){
+      showColumn('toDo');
       displayNewItem({items:{id: '', description: ''}});
       var workItemEl = $('#toDo').find('.item').last();
       displayEditDialog(workItemEl.children('.edit-dialog'), workItemEl.children('.description').text());
@@ -228,6 +235,22 @@ function deleteItemDB(workItem, onComplete){
   });
 }
 
+function showColumn(columnName){
+  switch (columnName) {
+    case 'toDo':
+      $('#slider').css('left', '0px');
+      break;
+    case 'inProgress':
+      $('#slider').css('left', '-' + $('#slider').width() + 'px');
+      break;
+    case 'done':
+    $('#slider').css('left', '-' + 2 * $('#slider').width() + 'px');
+    break;
+    default:
+      $('#slider').css('left', '0px');
+  }
+}
+
 function displayWorkItems(templateInput){
   var toDoItems = {items: []};
   var inProgressItems = {items: []};;
@@ -273,6 +296,7 @@ function moveItem(item, toColumn){
     var prevContainer = item.closest('.item-container');
     $('#' + toColumn).find('.item-container').append(item);
     updateSortOrder(prevContainer);
+    showColumn(toColumn);
   });
 }
 
