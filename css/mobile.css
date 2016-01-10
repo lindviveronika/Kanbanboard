@@ -103,6 +103,7 @@ ul {
 	right: 0px;
 	top: 0px;
 	border-radius: 4px 0 4px 4px;
+  border: 2px solid #EEEEEE;
   z-index: 10;
   margin: 0;
 }
@@ -110,6 +111,10 @@ ul {
 li {
 	padding: 10px 0;
 	margin: 0;
+}
+
+a {
+  text-decoration: none;
 }
 
 button {
@@ -174,6 +179,7 @@ button {
 
 .btn-menu {
   background-image: url(mobile-menu-icon.png);
+  z-index: 50;
 }
 
 #newItemButton {

@@ -47,7 +47,6 @@ $(document).ready(function(){
   //Open edit dialog
   $(document).on('click','.item',function(){
     var workItem = $(this);
-    console.log('click on item');
     displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
 
   });
@@ -70,7 +69,13 @@ $(document).ready(function(){
   //Open menu
   $(document).on('click','.btn-menu',function(event){
       event.stopPropagation();
-      $(this).next('ul').show();
+      var menu = $(this).next('ul')
+      menu.show();
+      $(document).click(function(event){
+        if(!menu.is(event.target) && menu.has(event.target).length === 0){
+          menu.hide();
+        }
+      });
   });
 
   //Delete item
@@ -219,7 +224,6 @@ function editItemSortOrderDB(items){
 }
 
 function deleteItemDB(workItem, onComplete){
-  console.log('delete');
   var posting = $.post('php/deleteItem.php', {id: getItemId(workItem)});
   var errorMessage = 'Item was not deleted. Please refresh the page and try again.';
 
@@ -309,7 +313,6 @@ function updateSortOrder(itemContainer){
 }
 
 function displayEditDialog(dialog, currentDescription){
-  console.log('show');
   dialog.show();
   $('.overlay').show();
   $('html, body').animate({
@@ -321,7 +324,6 @@ function displayEditDialog(dialog, currentDescription){
 }
 
 function hideEditDialog(dialog){
-  console.log('hide');
   dialog.hide();
   $('.overlay').hide();
 }
