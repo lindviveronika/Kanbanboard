@@ -58,6 +58,7 @@ body {
 
 .item > .description {
   display: inline;
+  white-space: normal;
 }
 
 .edit-dialog {
