@@ -2,17 +2,17 @@ $(document).ready(function(){
 
   var body = document.getElementById("body")
 
-  Hammer(body).on('panleft', function(event){
-    var currentPosition = parseInt($('#slider').css('left'));
-    if(currentPosition == 0){
-      showColumn('inProgress');
-    }
-    else if (currentPosition == -$('#slider').width()){
-      showColumn('done');
-    }
+  $('body').hammer().bind('panleft', function(event){
+      var currentPosition = parseInt($('#slider').css('left'));
+      if(currentPosition == 0){
+        showColumn('inProgress');
+      }
+      else if (currentPosition == -$('#slider').width()){
+        showColumn('done');
+      }
   });
 
-  Hammer(body).on('panright', function(event){
+  $('body').hammer().bind('panright', function(event){
     var currentPosition = parseInt($('#slider').css('left'));
     if(currentPosition == -$('#slider').width()){
       showColumn('toDo');
@@ -21,6 +21,8 @@ $(document).ready(function(){
       showColumn('inProgress');
     }
   });
+
+  $('body').data('hammer').get('pan').set({threshold: 50});
 
   //Load work items
   getWorkItemsDB(displayWorkItems);
