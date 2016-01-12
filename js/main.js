@@ -57,6 +57,7 @@ $(document).ready(function(){
   $('.item-container').sortable({
       connectWith: '.item-container',
       revert: true,
+      cursor: "move",
       receive: function(event, ui) {
         editItemStageDB(ui.item, $(this).parent().attr('id'));
       },
