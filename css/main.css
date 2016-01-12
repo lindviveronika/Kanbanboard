@@ -29,7 +29,7 @@ body {
   margin: 1%;
   border-radius: 2px;
   box-shadow: 0.5px 0.5px 1px #888888;
-  background-color: #EEEEEE;
+  background-color: #EEE;
 }
 
 .column-header {
@@ -47,7 +47,7 @@ body {
 .item {
   position: relative;
   border-radius: 2px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #CCC;
   box-shadow: 0.5px 0.5px 1px #888888;
   min-height: 50px;
   margin: 6px;
@@ -58,7 +58,7 @@ body {
 }
 
 .item:hover {
-  background-color: grey;
+  background-color: #FBFBFB;
 }
 
 .item > .description {
