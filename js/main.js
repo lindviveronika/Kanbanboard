@@ -58,7 +58,7 @@ $(document).ready(function(){
       connectWith: '.item-container',
       revert: true,
       receive: function(event, ui) {
-          editItemStageDB(ui.item, getItemId($(this).parent()));
+        editItemStageDB(ui.item, $(this).parent().attr('id'));
       },
       update: function(event, ui){
           var data = $(this).sortable('serialize');
@@ -155,7 +155,7 @@ function editItemDescriptionDB(workItem, newDescription, onComplete){
 }
 
 function editItemStageDB(workItem, stage){
-  var posting = $.post('php/editStage.php', {id: getItemId(workItem), stage: stage});
+  var posting = $.post('php/editStage.php', {id: getItemId(workItem), stage: stage, sortOrder: 0});
   var errorMessage = 'Item stage was not updated. Please refresh the page and try again.';
 
   posting.done(function(response){
