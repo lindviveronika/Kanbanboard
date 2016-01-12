@@ -55,6 +55,7 @@ body {
 .item {
   position: relative;
   border-radius: 2px;
+  border-bottom: 1px solid #ccc;
   box-shadow: 0.5px 0.5px 1px #888888;
   min-height: 50px;
   margin: 6px;
