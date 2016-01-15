@@ -1,25 +1,43 @@
 $(document).ready(function(){
 
-  var body = document.getElementById("body")
-
+  //Swipe right
   $('body').hammer().bind('panleft', function(event){
-      var currentPosition = parseInt($('#slider').css('left'));
+      var currentPosition = parseFloat($('#slider').css('left'));
       if(currentPosition == 0){
         showColumn('inProgress');
       }
-      else if (currentPosition == -$('#slider').width()){
+      else if (currentPosition == - $('#slider').width() * 0.855){
         showColumn('done');
       }
   });
 
+  //Swipe left
   $('body').hammer().bind('panright', function(event){
-    var currentPosition = parseInt($('#slider').css('left'));
-    if(currentPosition == -$('#slider').width()){
+    var currentPosition = parseFloat($('#slider').css('left'));
+    if(currentPosition == - $('#slider').width() * 0.855){
       showColumn('toDo');
     }
-    else if (currentPosition == -2 * $('#slider').width()) {
+    else if (currentPosition == - 2 * $('#slider').width() * 0.855) {
       showColumn('inProgress');
     }
+  });
+
+  //Show sort item option
+  $('.item-container').hammer({domEvents:true}).on('press', '.item', function(){
+      var item = $(this);
+      $('.overlay').show();
+      item.css('z-index', 100);
+      $('body').hammer({domEvents:true}).one('tap', function(event){
+          $('.overlay').hide();
+          item.css('z-index', 'auto');
+      });
+  });
+
+  //Open edit dialog
+  $('.item-container').hammer({domEvents:true}).on('tap', '.item', function(){
+    var workItem = $(this);
+    displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
+
   });
 
   $('body').data('hammer').get('pan').set({threshold: 50});
@@ -46,13 +64,6 @@ $(document).ready(function(){
       })
   });
 
-  //Open edit dialog
-  $(document).on('click','.item',function(){
-    var workItem = $(this);
-    displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
-
-  });
-
   //Save changes
   $(document).on('click','.btn-save',function(event){
       event.stopPropagation();
@@ -73,7 +84,7 @@ $(document).ready(function(){
       event.stopPropagation();
       var menu = $(this).next('ul')
       menu.show();
-      $(document).click(function(event){
+      $(document).one('click',function(event){
         if(!menu.is(event.target) && menu.has(event.target).length === 0){
           menu.hide();
         }
@@ -247,10 +258,10 @@ function showColumn(columnName){
       $('#slider').css('left', '0px');
       break;
     case 'inProgress':
-      $('#slider').css('left', '-' + $('#slider').width() + 'px');
+      $('#slider').css('left', '-' + $('#slider').width() * 0.855 + 'px');
       break;
     case 'done':
-    $('#slider').css('left', '-' + 2 * $('#slider').width() + 'px');
+    $('#slider').css('left', '-' + 2 * $('#slider').width() * 0.855 + 'px');
     break;
     default:
       $('#slider').css('left', '0px');
