@@ -63,7 +63,6 @@ $(document).ready(function(){
       },
       update: function(event, ui){
           var data = $(this).sortable('serialize');
-          console.log(data);
           if(data != ''){
               editItemSortOrderDB(data);
           }
