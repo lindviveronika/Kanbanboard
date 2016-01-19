@@ -70,6 +70,10 @@ body {
   white-space: normal;
 }
 
+.item-dragging {
+  background-color: red;
+}
+
 .edit-dialog {
 	display: none;
   top: 0;

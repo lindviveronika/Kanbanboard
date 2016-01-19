@@ -1,7 +1,10 @@
 $(document).ready(function(){
 
+  var dragging = false;
+
   //Swipe right
   $('body').hammer().bind('panleft', function(event){
+    if(!dragging){
       var currentPosition = parseFloat($('#slider').css('left'));
       if(currentPosition == 0){
         showColumn('inProgress');
@@ -9,28 +12,43 @@ $(document).ready(function(){
       else if (currentPosition == - $('#slider').width() * 0.855){
         showColumn('done');
       }
+    }
   });
 
   //Swipe left
   $('body').hammer().bind('panright', function(event){
-    var currentPosition = parseFloat($('#slider').css('left'));
-    if(currentPosition == - $('#slider').width() * 0.855){
-      showColumn('toDo');
-    }
-    else if (currentPosition == - 2 * $('#slider').width() * 0.855) {
-      showColumn('inProgress');
+    if(!dragging){
+      var currentPosition = parseFloat($('#slider').css('left'));
+      if(currentPosition == - $('#slider').width() * 0.855){
+        showColumn('toDo');
+      }
+      else if (currentPosition == - 2 * $('#slider').width() * 0.855) {
+        showColumn('inProgress');
+      }
     }
   });
 
   //Show sort item option
-  $('.item-container').hammer({domEvents:true}).on('press', '.item', function(){
+  $('body').hammer({domEvents:true}).on('press', '.item', function(){
       var item = $(this);
-      $('.overlay').show();
-      item.css('z-index', 100);
-      $('body').hammer({domEvents:true}).one('tap', function(event){
-          $('.overlay').hide();
-          item.css('z-index', 'auto');
+      console.log('press');
+      dragging = true;
+      item.addClass('item-dragging');
+      $('body').on('touchmove', function(event){
+        event.preventDefault();
+        if(dragging){
+          item.offset({
+              top: event.originalEvent.touches[0].pageY
+          });
+        }
       });
+
+      $('body').on('touchend', function(event){
+        dragging = false;
+        item.removeClass('item-dragging');
+        $('body').off('touchmove');
+      });
+
   });
 
   //Open edit dialog
@@ -40,7 +58,7 @@ $(document).ready(function(){
 
   });
 
-  $('body').data('hammer').get('pan').set({threshold: 50});
+  $('body').data('hammer').get('pan').set({threshold: 100});
 
   //Load work items
   getWorkItemsDB(displayWorkItems);
