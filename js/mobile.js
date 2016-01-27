@@ -2,8 +2,10 @@ $(document).ready(function(){
 
   var dragging = false;
 
+  $('body').hammer({domEvents: true});
+
   //Swipe right
-  $('body').hammer().bind('panleft', function(event){
+  $('body').on('panleft', function(event){
     if(!dragging){
       var currentPosition = parseFloat($('#slider').css('left'));
       if(currentPosition == 0){
@@ -16,7 +18,7 @@ $(document).ready(function(){
   });
 
   //Swipe left
-  $('body').hammer().bind('panright', function(event){
+  $('body').on('panright', function(event){
     if(!dragging){
       var currentPosition = parseFloat($('#slider').css('left'));
       if(currentPosition == - $('#slider').width() * 0.855){
@@ -28,10 +30,9 @@ $(document).ready(function(){
     }
   });
 
-  //Show sort item option
-  $('body').hammer({domEvents:true}).on('press', '.item', function(){
+  //Sort item
+  $('body').on('press', '.item', function(){
       var item = $(this);
-      console.log('press');
       dragging = true;
       item.addClass('item-dragging');
       $('body').on('touchmove', function(event){
@@ -48,21 +49,13 @@ $(document).ready(function(){
         item.removeClass('item-dragging');
         $('body').off('touchmove');
       });
-
   });
 
   //Open edit dialog
-  $('.item-container').hammer({domEvents:true}).on('tap', '.item', function(){
-    var workItem = $(this);
-    displayEditDialog(workItem.children('.edit-dialog'), workItem.children('.description').text());
-
+  $('body').on('tap', '.item', function(){
+    console.log('edit');
+    displayEditDialog($(this).children('.edit-dialog'), $(this).children('.description').text());
   });
-
-  $('body').data('hammer').get('pan').set({threshold: 100});
-
-  //Load work items
-  getWorkItemsDB(displayWorkItems);
-
 
   //Add new item
   $('#newItemButton').click(function(){
@@ -70,31 +63,29 @@ $(document).ready(function(){
       displayNewItem({items:{id: '', description: ''}});
       var workItemEl = $('#toDo').find('.item').last();
       displayEditDialog(workItemEl.children('.edit-dialog'), workItemEl.children('.description').text());
-
-      workItemEl.find('.btn-save').click(function(){
-          var itemDescription = workItemEl.find('.content-editable').text();
-          addNewItemDB(workItemEl, itemDescription, updateNewItem);
-      });
-
-      workItemEl.find('.btn-close').click(function(){
-          hideEditDialog(workItemEl.children('.edit-dialog'));
-          workItemEl.remove();
-      })
   });
 
   //Save changes
-  $(document).on('click','.btn-save',function(event){
-      event.stopPropagation();
-      var workItem = $(this).closest('.item');
-      var newDescription = workItem.find('.content-editable').text();
-      editItemDescriptionDB(workItem, newDescription, hideEditDialog);
+  $('body').on('tap','.btn-save',function(event){
+      event.stopImmediatePropagation();
+      var workItemEl = $(this).closest('.item');
+      if(getItemId(workItemEl) != ''){
+        editItemDescriptionDB(workItemEl, getItemDescription(workItemEl), hideEditDialog);
+      }
+      else{
+        addNewItemDB(workItemEl, getItemDescription(workItemEl), updateNewItem);
+      }
   });
 
   //Close dialog
-  $(document).on('click','.btn-close',function(event){
-      event.stopPropagation();
-      var workItem = $(this).closest('.item');
-      hideEditDialog(workItem.children('.edit-dialog'));
+  $('body').on('tap','.btn-close',function(event){
+      event.stopImmediatePropagation();
+      console.log('close');
+      var workItemEl = $(this).closest('.item');
+      hideEditDialog(workItemEl.children('.edit-dialog'));
+      if(getItemId(workItemEl) == ''){
+        workItemEl.remove();
+      }
   });
 
   //Open menu
@@ -139,6 +130,12 @@ $(document).ready(function(){
       moveItem($(this).closest('.item'), 'done');
   });
 
+
+  $('body').data('hammer').get('pan').set({threshold: 100});
+
+  //Load work items
+  getWorkItemsDB(displayWorkItems);
+
 });
 
 function getSortOrder(column){
@@ -147,6 +144,10 @@ function getSortOrder(column){
 
 function getItemId(workItem){
   return workItem.attr('id').replace('item-','');
+}
+
+function getItemDescription(workItem){
+  return workItem.find('.content-editable').val();
 }
 
 function toIdString(idArray){
@@ -307,15 +308,12 @@ function displayWorkItems(templateInput){
       $('#toDo').find('.item-container').append(Mustache.render(workItemTemplate, toDoItems));
       $('#inProgress').find('.item-container').append(Mustache.render(workItemTemplate, inProgressItems));
       $('#done').find('.item-container').append(Mustache.render(workItemTemplate, doneItems));
-
   });
 }
 
 function displayNewItem(templateInput){
   $('#toDo').find('.item-container').append(Mustache.render(workItemTemplate, templateInput));
-  $('html, body').animate({
-    scrollTop: $('.item').last().offset().top
-  }, 1000);
+  //$('#toDo').find('.item').last().hammer();
 }
 
 function updateNewItem(item, id, description){
@@ -348,32 +346,17 @@ function displayEditDialog(dialog, currentDescription){
   $('.overlay').show();
   $('html, body').animate({
     scrollTop: $(dialog).last().offset().top
-  }, 1000);
-  dialog.find('.content-editable').text(currentDescription);
-  dialog.find('.content-editable').focus();
-  placeCaretAtEnd( dialog.find('.content-editable')[0] );
+  }, 500);
+  var textarea = dialog.find('.content-editable');
+  var val = currentDescription;
+  textarea.val(currentDescription);
+  textarea
+      .focus()
+      .val("")
+      .val(val);
 }
 
 function hideEditDialog(dialog){
   dialog.hide();
   $('.overlay').hide();
-}
-
-//Taken from http://stackoverflow.com/questions/4233265/contenteditable-set-caret-at-the-end-of-the-text-cross-browser
-function placeCaretAtEnd(el) {
-  el.focus();
-  if (typeof window.getSelection != "undefined"
-          && typeof document.createRange != "undefined") {
-      var range = document.createRange();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      var sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-  } else if (typeof document.body.createTextRange != "undefined") {
-      var textRange = document.body.createTextRange();
-      textRange.moveToElementText(el);
-      textRange.collapse(false);
-      textRange.select();
-  }
 }
