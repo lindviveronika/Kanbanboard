@@ -130,9 +130,6 @@ $(document).ready(function(){
       moveItem($(this).closest('.item'), 'done');
   });
 
-
-  $('body').data('hammer').get('pan').set({threshold: 100});
-
   //Load work items
   getWorkItemsDB(displayWorkItems);
 
