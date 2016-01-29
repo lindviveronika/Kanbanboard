@@ -72,6 +72,7 @@ body {
 
 .item-dragging {
   background-color: red;
+  z-index: 1000;
 }
 
 .edit-dialog {
