@@ -36,6 +36,7 @@ $(document).ready(function(){
       dragging = true;
       item.addClass('item-dragging');
       var startPosition = item.offset().top;
+      var newPosition = item.offset().top;
       $('body').on('touchmove', function(event){
         event.preventDefault();
         if(dragging){
@@ -44,26 +45,29 @@ $(document).ready(function(){
           });
           item.siblings().each(function(){
             if(Math.abs(item.offset().top - $(this).offset().top) < 5){
-              var newStartPosition =  $(this).offset().top;
+              newPosition =  $(this).offset().top;
               $(this).offset({
                 top: startPosition
               });
-              startPosition = newStartPosition;
+              startPosition = newPosition;
             }
           });
         }
       });
 
-      $('body').on('touchend', function(event){
+      $('body').one('touchend', function(event){
+        console.log('touchend');
         dragging = false;
         item.removeClass('item-dragging');
         $('body').off('touchmove');
+        item.offset({
+            top: newPosition
+        });
       });
   });
 
   //Open edit dialog
   $('body').on('tap', '.item', function(){
-    console.log('edit');
     displayEditDialog($(this).children('.edit-dialog'), $(this).children('.description').text());
   });
 
