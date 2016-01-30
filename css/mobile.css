@@ -71,7 +71,7 @@ body {
 }
 
 .item-dragging {
-  background-color: red;
+  box-shadow: 5px 5px 5px #888888;
   z-index: 1000;
 }
 

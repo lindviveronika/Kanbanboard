@@ -35,11 +35,21 @@ $(document).ready(function(){
       var item = $(this);
       dragging = true;
       item.addClass('item-dragging');
+      var startPosition = item.offset().top;
       $('body').on('touchmove', function(event){
         event.preventDefault();
         if(dragging){
           item.offset({
               top: event.originalEvent.touches[0].pageY
+          });
+          item.siblings().each(function(){
+            if(Math.abs(item.offset().top - $(this).offset().top) < 5){
+              var newStartPosition =  $(this).offset().top;
+              $(this).offset({
+                top: startPosition
+              });
+              startPosition = newStartPosition;
+            }
           });
         }
       });
