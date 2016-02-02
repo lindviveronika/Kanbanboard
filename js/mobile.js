@@ -37,6 +37,7 @@ $(document).ready(function(){
       item.addClass('item-dragging');
       var startPosition = item.offset().top;
       var newPosition = item.offset().top;
+      var appendNextTo;
       $('body').on('touchmove', function(event){
         event.preventDefault();
         if(dragging){
@@ -45,24 +46,33 @@ $(document).ready(function(){
           });
           item.siblings().each(function(){
             if(Math.abs(item.offset().top - $(this).offset().top) < 5){
-              newPosition =  $(this).offset().top;
+              newPosition = $(this).offset().top;
               $(this).offset({
                 top: startPosition
               });
               startPosition = newPosition;
+              appendNextTo = $(this);
             }
           });
         }
       });
 
       $('body').one('touchend', function(event){
-        console.log('touchend');
         dragging = false;
         item.removeClass('item-dragging');
         $('body').off('touchmove');
-        item.offset({
-            top: newPosition
+        if(item.offset().top > appendNextTo.offset().top){
+          item.insertAfter(appendNextTo);
+          console.log('insertAfter');
+        }
+        else{
+          item.insertBefore(appendNextTo);
+          console.log('insertBefore');
+        }
+        $('.item').each(function(){
+          $(this).css('top','auto');
         });
+        updateSortOrder(item.closest('.item-container'));
       });
   });
 
@@ -324,7 +334,6 @@ function displayWorkItems(templateInput){
 
 function displayNewItem(templateInput){
   $('#toDo').find('.item-container').append(Mustache.render(workItemTemplate, templateInput));
-  //$('#toDo').find('.item').last().hammer();
 }
 
 function updateNewItem(item, id, description){
@@ -347,6 +356,7 @@ function moveItem(item, toColumn){
 function updateSortOrder(itemContainer){
   var remainingItems = itemContainer.children('.item');
   var itemIds = toIdString(remainingItems);
+  console.log(itemIds);
   if(itemIds.length > 0){
     editItemSortOrderDB(itemIds);
   }
