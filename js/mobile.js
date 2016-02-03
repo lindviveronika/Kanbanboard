@@ -97,7 +97,6 @@ $(document).ready(function(){
   //Close dialog
   $('body').on('tap','.btn-close',function(event){
       event.stopImmediatePropagation();
-      console.log('close');
       var workItemEl = $(this).closest('.item');
       hideEditDialog(workItemEl.children('.edit-dialog'));
       if(getItemId(workItemEl) == ''){
@@ -133,31 +132,24 @@ $(document).ready(function(){
   $(document).on('click','.move-todo',function(event){
       event.stopPropagation();
       moveItem($(this).closest('.item'), 'toDo');
-      console.log('move to do');
   });
 
   //Move item to In Progress
   $(document).on('click','.move-inprogress',function(event){
       event.stopPropagation();
       moveItem($(this).closest('.item'), 'inProgress');
-      console.log('move in progress');
   });
 
   //Move item to Done
   $(document).on('click','.move-done',function(event){
       event.stopPropagation();
       moveItem($(this).closest('.item'), 'done');
-      console.log('move done');
   });
 
   //Load work items
   getWorkItemsDB(displayWorkItems);
 
 });
-
-function initateMenuListeners(){
-
-}
 
 function getSortOrder(column){
   return  $('#' + column).find('.item-container').children().length;
@@ -356,7 +348,6 @@ function moveItem(item, toColumn){
 function updateSortOrder(itemContainer){
   var remainingItems = itemContainer.children('.item');
   var itemIds = toIdString(remainingItems);
-  console.log(itemIds);
   if(itemIds.length > 0){
     editItemSortOrderDB(itemIds);
   }
