@@ -12,7 +12,7 @@ $(document).ready(function(){
   //Add new item
   $('#newItemButton').click(function(){
       displayNewItem({items:{id: '', description: ''}});
-      var workItemEl = $('.item').last();
+      var workItemEl = $('#toDo').find('.item').last();
       displayEditDialog(workItemEl.children('.edit-dialog'), workItemEl.children('.description').text());
 
       workItemEl.find('.btn-save').click(function(){
@@ -229,7 +229,7 @@ function displayWorkItems(templateInput){
 function displayNewItem(templateInput){
   $('#toDo').find('.item-container').append(Mustache.render(workItemTemplate, templateInput));
   $('html, body').animate({
-    scrollTop: $('.item').last().offset().top
+    scrollTop: $('#toDo').find('.item').last().offset().top
   }, 1000);
 }
 
