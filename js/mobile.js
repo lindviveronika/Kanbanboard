@@ -33,11 +33,15 @@ $(document).ready(function(){
   //Sort item
   $('body').on('press', '.item', function(){
       var item = $(this);
-      dragging = true;
-      item.addClass('item-dragging');
       var startPosition = item.offset().top;
       var newPosition = item.offset().top;
-      var appendNextTo = item.prev('.item');
+      var insertNextTo = item.prev('.item');
+      var changePositionDistance = 5;
+
+      dragging = true;
+
+      item.addClass('item-dragging');
+
       $('body').on('touchmove', function(event){
         event.preventDefault();
         if(dragging){
@@ -45,13 +49,13 @@ $(document).ready(function(){
               top: event.originalEvent.touches[0].pageY
           });
           item.siblings().each(function(){
-            if(Math.abs(item.offset().top - $(this).offset().top) < 5){
+            if(Math.abs(item.offset().top - $(this).offset().top) < changePositionDistance){
               newPosition = $(this).offset().top;
               $(this).offset({
                 top: startPosition
               });
               startPosition = newPosition;
-              appendNextTo = $(this);
+              insertNextTo = $(this);
             }
           });
         }
@@ -59,19 +63,8 @@ $(document).ready(function(){
 
       $('body').one('touchend', function(event){
         dragging = false;
-        item.removeClass('item-dragging');
         $('body').off('touchmove');
-        if(item.offset().top > appendNextTo.offset().top){
-          item.insertAfter(appendNextTo);
-          console.log('insertAfter');
-        }
-        else{
-          item.insertBefore(appendNextTo);
-          console.log('insertBefore');
-        }
-        $('.item').each(function(){
-          $(this).css('top','auto');
-        });
+        stopDraggingItem(item, insertNextTo);
         updateSortOrder(item.closest('.item-container'));
       });
   });
@@ -389,4 +382,17 @@ function hideEditDialog(dialog){
   menu.hide();
   dialog.hide();
   $('.overlay').hide();
+}
+
+function stopDraggingItem(item, insertNextTo){
+  item.removeClass('item-dragging');
+  if(item.offset().top > insertNextTo.offset().top){
+    item.insertAfter(insertNextTo);
+  }
+  else{
+    item.insertBefore(insertNextTo);
+  }
+  $('.item').each(function(){
+    $(this).css('top','auto');
+  });
 }
