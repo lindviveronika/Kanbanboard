@@ -37,7 +37,7 @@ $(document).ready(function(){
       item.addClass('item-dragging');
       var startPosition = item.offset().top;
       var newPosition = item.offset().top;
-      var appendNextTo;
+      var appendNextTo = item.prev('.item');
       $('body').on('touchmove', function(event){
         event.preventDefault();
         if(dragging){
