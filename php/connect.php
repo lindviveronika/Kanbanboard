@@ -1,10 +1,8 @@
 <?php
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $db = "kanbanboard";
 
-    $connect = mysqli_connect($servername, $username, $password, $db);
+    $ini_array = parse_ini_file("login.ini");
+
+    $connect = mysqli_connect($ini_array["servername"], $ini_array["username"], $ini_array["password"], $ini_array["db"]);
     if (!$connect) {
     	$result = array(
 	  	'response' => array(
