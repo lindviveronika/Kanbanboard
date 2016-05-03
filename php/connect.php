@@ -1,6 +1,6 @@
 <?php
 
-    $ini_array = parse_ini_file("login.ini");
+    $ini_array = parse_ini_file("config/login.ini");
 
     $connect = mysqli_connect($ini_array["servername"], $ini_array["username"], $ini_array["password"], $ini_array["db"]);
     if (!$connect) {
