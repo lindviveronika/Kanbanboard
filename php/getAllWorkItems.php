@@ -3,10 +3,16 @@
     mysqli_set_charset($connect,"utf8");
     $result = mysqli_query($connect, "SELECT * FROM workItems ORDER BY sortOrder");
     if($result !== false) {
+
+        $results_array = array();
+        while ($row = $result->fetch_assoc()) {
+            $results_array[] = $row;
+        }
+
     	$response = array(
     		'status' => 'success',
     		'msg' => 'fetched items successfully',
-    		'data' => mysqli_fetch_all($result,MYSQLI_ASSOC)
+    		'data' => $results_array
 		);
 	}
 	else{
