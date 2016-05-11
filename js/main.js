@@ -127,7 +127,7 @@ function getWorkItemsDB(onComplete){
 function addNewItemDB(workItemEl, itemDescription, onComplete){
   var sortOrder = $('#toDo').find('.item-container').children().length - 1;
 
-  var posting = $.post('php/addNewItem.php', {description: itemDescription, sortOrder: sortOrder, stage: 'toDo'} );
+  var posting = $.post('php/addNewItem.php', {description: itemDescription.replace("'","''"), sortOrder: sortOrder, stage: 'toDo'} );
   var errorMessage = 'Item was not added. Please refresh the page and try again.';
 
   posting.done(function(response){
